@@ -1,6 +1,7 @@
 package agents;
 
+import jade.content.;
 
-public class SLRAgent {
+public class SLRAgent extends  {
     
 }
