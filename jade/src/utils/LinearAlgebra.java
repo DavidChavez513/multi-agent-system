@@ -42,10 +42,10 @@ public class LinearAlgebra {
         return rowVector;
     }
 
-    public double[] getColumn(int[][] dataMatrix2, int column) {
-        double[] columnVector = new double[dataMatrix2[0].length];
+    public double[] getColumn(double[][] dataMatrix2, int column) {
+        double[] columnVector = new double[dataMatrix2.length];
         for (int i = 0; i < columnVector.length; i++) {
-            columnVector[i] = dataMatrix2[column][i];
+            columnVector[i] = dataMatrix2[i][column];
         }
         return columnVector;
     }
@@ -148,10 +148,10 @@ public class LinearAlgebra {
         return gaussJordan;
     }
 
-    public double powVector(double[] vector, int power) {
-        double powVector = 0;
+    public double[] powVector(double[] vector, int power) {
+        double[] powVector = new double[vector.length];
         for (int i = 0; i < vector.length; i++) {
-            powVector += Math.pow(vector[i], power);
+            powVector[i] = Math.pow(vector[i], power);
         }
         return powVector;
     }

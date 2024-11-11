@@ -5,180 +5,52 @@ import java.util.Map;
 
 public class Regressions {
 
-
-    static DiscretMaths dm = new DiscretMaths();
+    static DiscreetMaths dm = new DiscreetMaths();
     static LinearAlgebra la = new LinearAlgebra();
+    static Operations ops = new Operations();
 
-    private class Linear {
+    public Map<String, Object> linearRegressionAnalysis() {
 
-        private DataSet dataSet;
-        private int[][] dataMatrix;
-        private double error = 0;
-        private double beta0 = 0;
-        private double beta1 = 0;
-        private double[] yHat;
-        private int[] y;
-        private int[] x;
-    
-        public Linear(DataSet _data) {
-            this.dataSet = _data;
-            this.dataMatrix = dataSet.getDataForLinearRegression();
-            this.yHat = new double[dataMatrix[0].length];
-            this.y = new int[dataMatrix[0].length];
-            this.x = new int[dataMatrix[0].length];
-        }
+        Map<String, Object> calculatedData = new HashMap<>();
 
-        public void calculateBeta0() {
-            double sumY = dm.RiemmanSum(la.getColumn(dataMatrix, 1));
-            double sumX = dm.RiemmanSum(la.getColumn(dataMatrix, 0));
-            double sumXY = dm.multiply(dataMatrix);
-            double sumX2 = la.powVector(la.getColumn(dataMatrix, 0), 2);
 
-            beta0 = (sumY * sumX2 - sumX * sumXY) / (dataMatrix[0].length * sumX2 - sumX * sumX);
-        }
+        double[][] data = new DataSet().getSigSigmaData();
 
-        public int[][] getDataMatrix() {
-            return dataMatrix;
-        }
+        double beta0 = ops.calculateB0(data);
+        double beta1 = ops.calculateB1(data);
 
-        public void calculateBeta1() {
-            double sumY = dm.RiemmanSum(la.getColumn(dataMatrix, 1));
-            double sumX = dm.RiemmanSum(la.getColumn(dataMatrix, 0));
-            double sumXY = dm.multiply(dataMatrix);
-            double sumX2 = la.powVector(la.getColumn(dataMatrix, 0), 2);
+        double[] betas = {
+            beta0,
+            beta1
+        };
 
-            beta1 = (dataMatrix[0].length * sumXY - sumX * sumY) / (dataMatrix[0].length * sumX2 - sumX * sumX);
-        }
+        double[] hats = ops.yHat(data, betas);
 
-        public void calculateYHat() {
-            for (int i = 0; i < dataMatrix[0].length; i++) {
-                yHat[i] = beta0 + beta1 * dataMatrix[0][i];
-            }
-        }
+        double[] error = ops.errors(data, hats);
+        double[] errorsPercent = ops.errorPercent(data, error);
 
-        public void calculateError() {
-            for (int i = 0; i < dataMatrix[0].length; i++) {
-                error += (dataMatrix[1][i] - yHat[i]) * (dataMatrix[1][i] - yHat[i]);
-            }
-        }
+        double percentErrorGlobal = ops.generalErrorPercent(data, errorsPercent);
 
-        public void calculateY() {
-            for (int i = 0; i < dataMatrix[0].length; i++) {
-                y[i] = dataMatrix[1][i];
-            }
-        }
+        calculatedData.put("beta0", beta0);
+        calculatedData.put("beta1", beta1);
+        calculatedData.put("errorPercent", percentErrorGlobal);
+        calculatedData.put("hats", hats);
+        calculatedData.put("error", error);
+        calculatedData.put("errorPercentRow", beta0);
+        
+        System.out.println("Y = " + betas[0] + " + " + betas[1] + "X; Con Linear Regression el porcentaje de error es de: " + percentErrorGlobal);
 
-        public void calculateX() {
-            for (int i = 0; i < dataMatrix[0].length; i++) {
-                x[i] = dataMatrix[0][i];
-            }
-        }
-
-        public double getBeta0() {
-            return beta0;
-        }
-
-        public double getBeta1() {
-            return beta1;
-        }
-
-        public double[] getyHat() {
-            return yHat;
-        }
-
-        public int[] getY() {
-            return y;
-        }
-
-        public int[] getX() {
-            return x;
-        }
-
-        public double getError() {
-            return error;
-        }
-
-        @Override
-        public String toString() {
-
-            System.out.println("Y = " + beta0 + " + " + beta1 + "X");
-            System.out.println("Error: " + error);
-
-            System.out.println("============ TABLA DE RESULTADOS ============");
-
-            System.out.println("| X\t| Y\t| YHat\t| Error");
-
-            for (int i = 0; i < dataMatrix[0].length; i++) {
-                System.out.println("| " + dataMatrix[0][i] + "\t| " + dataMatrix[1][i] + "\t| " + yHat[i] + "\t| "
-                        + (dataMatrix[1][i] - yHat[i]));
-            }
-
-            return "";
-
-        }
-
+        return calculatedData;
     }
 
-    private class MultipleLinear {
+    public void bestCurveToDataSet(int degreeRegression) {
 
-        private double[] coefficients;
-        private double[][] dataMatrix;
-        private double[] targetVector;
-
-        public MultipleLinear(double[][] _data, double[] _vector) {
-            this.coefficients = new double[_data[0].length];
-            this.dataMatrix = _data;
-            this.targetVector = _vector;
-        }
-
-        public void fit() {
-            double[][] transposeMatrix = la.transpose(dataMatrix);
-            double[][] xTx = la.multiply(transposeMatrix, dataMatrix);
-            double[][] inverseX_XT = la.inverse(xTx);
-            double[] x_yT = la.multiply(transposeMatrix, targetVector);
-
-            this.coefficients = la.multiply(inverseX_XT, x_yT);
-        }
+        
     }
 
-    private class Polynomial {
+    public double[] predictions(int noPredicts, double[] betas, int degreeRegression) {
 
-    }
-
-    public Map<String, Object> fitByLinearRegression() {
-
-        System.out.println("Is an log information");
-
-        DataSet test = new DataSet();
-
-        System.out.println(test.getDataForLinearRegression());
-
-        Linear lr = new Linear(test);
-        lr.calculateBeta0();
-        lr.calculateBeta1();
-        lr.calculateError();
-        lr.calculateYHat();
-
-        lr.toString();
-
-        Map<String, Object> betasMap = new HashMap<>();
-
-        betasMap.put("beta_0", lr.getBeta0());
-        betasMap.put("beta_1", lr.getBeta1());
-        betasMap.put("error", lr.getError());
-        betasMap.put("Y_hat", lr.getyHat());
-
-        return betasMap;
-
-    }
-
-    public double[] predictionsLinearRegression(int noPredicts, Linear lr) {
-
-        double[] predictions = new double[noPredicts];
-        for (int i = 0; i < noPredicts; i++) {
-            predictions[i] = lr.getBeta0() + lr.getBeta1() * (lr.getDataMatrix()[0][8] + ((i + 1) * 2));
-        }
-        return predictions;
+        return new double[1];
     }
 
     public Map<String, Object> fittingByMultipleLinearRegression() {

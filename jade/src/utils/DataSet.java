@@ -1,9 +1,20 @@
 package utils;
 
 public class DataSet {
-    private int[][] dataMatrix = {{1, 2, 3,4,5,6,7,8,9}, {4, 8, 12,16,20,24,28,32,36}};
+    private double[][] dataMatrix = {
+        {1, 2},
+        {2, 4},
+        {3, 6},
+        {4, 8},
+        {5, 10},
+        {6, 12},
+        {7, 14},
+        {8, 16},
+        {9, 18}
+    };
+    
 
-    public int[][] getDataForLinearRegression() {
+    public double[][] getDataForLinearRegression() {
         return dataMatrix;
     }
 
@@ -13,6 +24,40 @@ public class DataSet {
 
     public double[][] getDataForMultipleLinearRegression() {
         return dataForMultipleLinearRegression;
+    }
+
+    private double[][] sixSigmaBeltData = {
+        {108, 95},
+        {115, 96},
+        {106, 95},
+        {97, 97},
+        {95, 93},
+        {91, 94},
+        {97, 93},
+        {83, 92},
+        {83, 86},
+        {78, 86},
+        {54, 73},
+        {67, 80},
+        {56, 65},
+        {53, 69},
+        {61, 77},
+        {115, 96},
+        {81, 87},
+        {78, 89},
+        {30, 80},
+        {45, 63},
+        {99, 95},
+        {32, 61},
+        {25, 55},
+        {28, 56},
+        {50, 94},
+        {90, 94},
+        {89, 93}
+    };
+
+    public double[][] getSigSigmaData() {
+        return sixSigmaBeltData;
     }
 
 }
