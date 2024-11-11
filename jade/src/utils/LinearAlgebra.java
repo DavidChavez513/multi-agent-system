@@ -182,10 +182,6 @@ public class LinearAlgebra {
         int m = a.length;
         int n = a[0].length;
 
-        if (n != b.length) {
-            throw new IllegalArgumentException("No se pueden multiplicar matriz y vector de estas dimensiones.");
-        }
-
         double[] result = new double[m];
         for (int i = 0; i < m; i++) {
             double sum = 0;

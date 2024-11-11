@@ -6,5 +6,7 @@ public class Main {
         Regressions test = new Regressions();
 
         test.linearRegressionAnalysis();
+
+        test.multipleLinearRegressionAnalysis();
     }
 }

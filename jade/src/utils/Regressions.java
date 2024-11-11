@@ -43,6 +43,18 @@ public class Regressions {
         return calculatedData;
     }
 
+    public Map<String, Object> multipleLinearRegressionAnalysis() {
+
+        Map<String, Object> data = new HashMap<>();
+
+        
+
+
+
+
+        return data;
+    }
+
     public void bestCurveToDataSet(int degreeRegression) {
 
         
