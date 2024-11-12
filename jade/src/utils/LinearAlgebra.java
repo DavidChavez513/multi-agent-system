@@ -52,16 +52,22 @@ public class LinearAlgebra {
 
     public double determinant(double[][] matrix) {
         double determinant = 0;
+        
         if (matrix.length == 1) {
             return matrix[0][0];
         }
+
         if (matrix.length == 2) {
             determinant = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
             return determinant;
         }
-        for (int i = 0; i < matrix[0].length; i++) {
-            determinant += Math.pow(-1, i) * matrix[0][i] * determinant(minor(matrix, 0, i));
-        }
+        
+        
+        determinant += Math.pow(-1, matrix.length - 1) * matrix[matrix.length - 1][0] * determinant(minor(matrix, matrix.length - 1, 0));
+        
+
+
+
         return determinant;
     }
 
@@ -72,6 +78,7 @@ public class LinearAlgebra {
             inverse[0][0] = 1 / matrix[0][0];
             return inverse;
         }
+
         if (matrix.length == 2) {
             inverse[0][0] = matrix[1][1] / determinant;
             inverse[0][1] = -matrix[0][1] / determinant;
@@ -79,6 +86,7 @@ public class LinearAlgebra {
             inverse[1][1] = matrix[0][0] / determinant;
             return inverse;
         }
+
         for (int i = 0; i < inverse.length; i++) {
             for (int j = 0; j < inverse[0].length; j++) {
                 inverse[i][j] = Math.pow(-1, i + j) * determinant(minor(matrix, i, j)) / determinant;
@@ -181,6 +189,10 @@ public class LinearAlgebra {
     public double[] multiply(double[][] a, double[] b) {
         int m = a.length;
         int n = a[0].length;
+
+        if (a.length != b.length) {
+            n = b.length;
+        }
 
         double[] result = new double[m];
         for (int i = 0; i < m; i++) {

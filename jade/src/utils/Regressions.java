@@ -47,10 +47,33 @@ public class Regressions {
 
         Map<String, Object> data = new HashMap<>();
 
-        
+        double[][] dataSet = new DataSet().getDataForMultipleLinearRegression();
 
+        double[][] transposeData = la.transpose(dataSet);
 
+        double[][] transposeXForX = la.multiply(transposeData, dataSet);
 
+        double[][] inverseProductXTX = la.inverse(transposeXForX);
+
+        double[] transposeXForY = la.multiply(transposeData, new DataSet().getTargetMLRegression());
+
+        double[] betas = la.multiply(inverseProductXTX, transposeXForY);
+
+        double[] hats = ops.yHatMLR(dataSet, betas);
+
+        double[] error = ops.errors(dataSet, hats);
+
+        double percentErrorGlobal = ops.generalErrorPercent(dataSet, error);
+
+        StringBuffer msg = new StringBuffer("Y = " + betas[0]);
+
+        for (int i = 1; i < betas.length; i++) {
+            msg.append( betas[i] + "X"+ i + " + ");
+        }
+
+        System.out.println(msg + " Error: " + percentErrorGlobal);
+
+        data.put("betas", betas);
 
         return data;
     }
@@ -68,6 +91,7 @@ public class Regressions {
     public Map<String, Object> fittingByMultipleLinearRegression() {
 
         Map<String, Object> fittingMap = new HashMap<>();
+
 
         return fittingMap;
     }

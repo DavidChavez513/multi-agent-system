@@ -42,6 +42,23 @@ public class Operations {
         return hats;
     }
 
+    public double[] yHatMLR(double[][] matrix, double[] betas) {
+
+        double[] hats = new double[matrix.length];
+
+        for (int i = 0; i < hats.length; i++) {
+
+            double yHat = betas[0];
+            for (int j = 1; j < betas.length; j++) {
+                yHat += betas[j] * matrix[i][j];
+            }
+
+            hats[i] = yHat;
+        }
+
+        return hats;
+    }
+
     public double[] errors(double[][] matrix, double[] hats) {
 
         double[] error = new double[matrix.length];
