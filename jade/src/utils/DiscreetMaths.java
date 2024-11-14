@@ -18,6 +18,16 @@ public class DiscreetMaths {
         return sum;
     }
 
+    public double RiemannSum(double[] data, double[] vectorMultiply) {
+        double res = 0;
+
+        for (int i = 0; i < vectorMultiply.length; i++) {
+            res += data[i] * vectorMultiply[i];
+        }
+
+        return res;
+    }
+
 
     public double multiplyXForY(double[][] dataMatrix) {
         double sum = 0;

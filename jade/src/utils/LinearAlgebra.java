@@ -3,6 +3,9 @@ package utils;
 
 public class LinearAlgebra {
 
+    static DiscreetMaths dMaths = new DiscreetMaths();
+    static Operations ops = new Operations();
+
     private double[][] minor(double[][] matrix, int row, int column) {
         double[][] minor = new double[matrix.length - 1][matrix[0].length - 1];
         int minorRow = 0;
@@ -187,22 +190,83 @@ public class LinearAlgebra {
     }
 
     public double[] multiply(double[][] a, double[] b) {
-        int m = a.length;
-        int n = a[0].length;
+        double[] result = new double[a.length];
 
-        if (a.length != b.length) {
-            n = b.length;
-        }
-
-        double[] result = new double[m];
-        for (int i = 0; i < m; i++) {
-            double sum = 0;
-            for (int j = 0; j < n; j++) {
-                sum += a[i][j] * b[j];
+        for (int i = 0; i < result.length; i++) {
+            if (i == 0) {
+                result[i] = dMaths.RiemannSum(b);
+                continue;
             }
-            result[i] = sum;
+            result[i] = dMaths.RiemannSum(b, a[i]);
+            
         }
+
         return result;
+    }
+
+    public double[] resolveEquationSystem(double[][] matrix, double[] vector) {
+
+        double[] result = new double[vector.length];
+
+        for (int i = 0; i < result.length; i++) {
+            for (int j = 0; j < result.length; j++) {
+                result[i] += matrix[i][j] * vector[j];
+            }
+        }
+
+        return result;
+    }
+
+
+    public double[][] MLRNormalMatrix(double[][] matrix) {
+
+        int normalSize = matrix[0].length;
+
+        double[][] normal = new double[normalSize][normalSize];
+
+        int i = 0;
+        int k = 0;
+
+        while (i < normal.length) {
+            k = 0;
+            while (k < normal.length) {
+                
+                if (i == k && i == 0) {
+                    normal[i][k] = i == 0 ? matrix.length : dMaths.RiemannSum(getColumn(matrix, k), getColumn(matrix, i));
+                    k++;
+                    continue;
+                }
+
+                if (i == k) {
+                    normal[i][k] = i == 0 ? matrix.length : dMaths.RiemannSum(getColumn(matrix, k), getColumn(matrix, i));
+                    k++;
+                    continue;
+                }
+
+                normal[i][k] = dMaths.RiemannSum(getColumn(matrix, i), getColumn(matrix, k));
+
+                k++;
+            }
+            i++;
+        }
+
+        return normal;
+    }
+
+    public double[][] adjustXMatrix(double[][] matrix) {
+        double[][] xMatrix = new double[matrix.length][matrix[0].length];
+
+        for (int i = 0; i < xMatrix.length; i++) {
+            for (int j = 0; j < xMatrix[0].length; j++) {
+                if (j == 0) {
+                    xMatrix[i][j] = 1;
+                    continue;
+                }
+                xMatrix[i][j] = matrix[i][j - 1];
+            }
+        }
+
+        return xMatrix;
     }
 
 }

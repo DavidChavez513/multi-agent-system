@@ -48,32 +48,17 @@ public class Regressions {
         Map<String, Object> data = new HashMap<>();
 
         double[][] dataSet = new DataSet().getDataForMultipleLinearRegression();
+        double[] targetVector = la.getColumn(dataSet, dataSet[0].length - 1);
 
-        double[][] transposeData = la.transpose(dataSet);
+        dataSet = la.adjustXMatrix(dataSet);
 
-        double[][] transposeXForX = la.multiply(transposeData, dataSet);
+        double[][] normalMatrix = la.MLRNormalMatrix(dataSet);
 
-        double[][] inverseProductXTX = la.inverse(transposeXForX);
+        double[] normalForTarget = la.multiply(normalMatrix, targetVector);
 
-        double[] transposeXForY = la.multiply(transposeData, new DataSet().getTargetMLRegression());
+        double[] betas = la.resolveEquationSystem(normalMatrix, normalForTarget);
 
-        double[] betas = la.multiply(inverseProductXTX, transposeXForY);
-
-        double[] hats = ops.yHatMLR(dataSet, betas);
-
-        double[] error = ops.errors(dataSet, hats);
-
-        double percentErrorGlobal = ops.generalErrorPercent(dataSet, error);
-
-        StringBuffer msg = new StringBuffer("Y = " + betas[0]);
-
-        for (int i = 1; i < betas.length; i++) {
-            msg.append( betas[i] + "X"+ i + " + ");
-        }
-
-        System.out.println(msg + " Error: " + percentErrorGlobal);
-
-        data.put("betas", betas);
+        // data.put("betas", betas);
 
         return data;
     }

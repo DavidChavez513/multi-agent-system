@@ -86,4 +86,6 @@ public class Operations {
 
         return (sumPercentError / matrix.length) * 100;
     }
+
+    public int forth(int iterator, int arrSize) { return (iterator + 1) % arrSize; }
 }
