@@ -190,15 +190,19 @@ public class LinearAlgebra {
     }
 
     public double[] multiply(double[][] a, double[] b) {
-        double[] result = new double[a.length];
+        double[] result = new double[b.length];
+
+        System.out.println("This is a number columns " + result.length);
 
         for (int i = 0; i < result.length; i++) {
-            if (i == 0) {
-                result[i] = dMaths.RiemannSum(b);
-                continue;
+            for (int j = 0; j < a.length; j++) {
+                if (i == 0) {
+                    result[i] = dMaths.RiemannSum(b);
+                    continue;
+                }
+                result[i] = dMaths.RiemannSum(b, a[j]);
+                
             }
-            result[i] = dMaths.RiemannSum(b, a[i]);
-            
         }
 
         return result;

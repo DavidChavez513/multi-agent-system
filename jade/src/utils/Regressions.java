@@ -53,7 +53,8 @@ public class Regressions {
         dataSet = la.adjustXMatrix(dataSet);
 
         double[][] normalMatrix = la.MLRNormalMatrix(dataSet);
-        double[] normalForTarget = la.multiply(normalMatrix, targetVector);
+        double[][] dataSetTranspose = la.transpose(dataSet);
+        double[] normalForTarget = la.multiply(dataSetTranspose, targetVector);
 
         normalMatrix = la.inverse(normalMatrix);
 
