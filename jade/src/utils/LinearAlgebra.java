@@ -231,11 +231,6 @@ public class LinearAlgebra {
             k = 0;
             while (k < normal.length) {
                 
-                if (i == k && i == 0) {
-                    normal[i][k] = i == 0 ? matrix.length : dMaths.RiemannSum(getColumn(matrix, k), getColumn(matrix, i));
-                    k++;
-                    continue;
-                }
 
                 if (i == k) {
                     normal[i][k] = i == 0 ? matrix.length : dMaths.RiemannSum(getColumn(matrix, k), getColumn(matrix, i));
