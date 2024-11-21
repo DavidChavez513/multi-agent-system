@@ -75,28 +75,42 @@ public class LinearAlgebra {
     }
 
     public double[][] inverse(double[][] matrix) {
-        double[][] inverse = new double[matrix.length][matrix[0].length];
-        double determinant = determinant(matrix);
-        if (matrix.length == 1) {
-            inverse[0][0] = 1 / matrix[0][0];
-            return inverse;
+        int n = matrix.length;
+
+        // Calcular el determinante
+        double det = determinant(matrix);
+        if (det == 0) {
+            throw new ArithmeticException("La matriz no tiene inversa (determinante = 0)");
         }
 
-        if (matrix.length == 2) {
-            inverse[0][0] = matrix[1][1] / determinant;
-            inverse[0][1] = -matrix[0][1] / determinant;
-            inverse[1][0] = -matrix[1][0] / determinant;
-            inverse[1][1] = matrix[0][0] / determinant;
-            return inverse;
-        }
+        // Matriz de cofactores
+        double[][] cofactors = cofactorMatrix(matrix);
 
-        for (int i = 0; i < inverse.length; i++) {
-            for (int j = 0; j < inverse[0].length; j++) {
-                inverse[i][j] = Math.pow(-1, i + j) * determinant(minor(matrix, i, j)) / determinant;
+        // Transponer la matriz de cofactores (adjunta)
+        double[][] adjoint = transpose(cofactors);
+
+        // Dividir cada elemento por el determinante
+        double[][] inverse = new double[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                inverse[i][j] = adjoint[i][j] / det;
             }
         }
-        inverse = transpose(inverse);
+
         return inverse;
+    }
+
+    // Método para calcular la matriz de cofactores
+    public double[][] cofactorMatrix(double[][] matrix) {
+        int n = matrix.length;
+        double[][] cofactors = new double[n][n];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                cofactors[i][j] = Math.pow(-1, i + j) * determinant(minor(matrix, i, j));
+            }
+        }
+        return cofactors;
     }
 
 
@@ -194,30 +208,57 @@ public class LinearAlgebra {
 
         System.out.println("This is a number columns " + result.length);
 
-        for (int i = 0; i < result.length; i++) {
-            for (int j = 0; j < a.length; j++) {
-                if (i == 0) {
-                    result[i] = dMaths.RiemannSum(b);
-                    continue;
-                }
-                result[i] = dMaths.RiemannSum(b, a[j]);
-                
-            }
+        if (a[0].length != b.length) {
+            System.out.println("No se puede multiplicar una matriz por un vector de diferente numero de columnas");
+            return result;
         }
 
+        int i = 0, j = 0;
+
+        do {
+
+            result[i] += a[i][j] * b[j];
+            j++;
+
+            if (j == b.length && i < a.length) {
+                j = 0;
+                i += 1;
+                continue;
+            }
+
+        } while (j < b.length && i < a.length);
+        
         return result;
     }
 
-    public double[] resolveEquationSystem(double[][] matrix, double[] vector) {
+    public double[] resolveEquationSystem(double[][] a, double[] b, double[] y) {
 
-        double[] result = new double[vector.length];
+        double[] result = new double[a.length];
 
-        for (int i = 0; i < result.length; i++) {
-            for (int j = 0; j < result.length; j++) {
-                result[i] += matrix[i][j] * vector[j];
-            }
+        if (a[0].length != b.length) {
+            System.out.println("No se puede multiplicar una matriz por un vector de diferente numero de columnas");
+            return result;
         }
 
+        int i = 0, j = 0;
+
+        do {
+
+            if (i == 0) {
+                result[i] += y[j];
+            }
+
+            result[i] += a[i][j] * b[j];
+            j++;
+
+            if (j == b.length && i < a.length) {
+                j = 0;
+                i += 1;
+                continue;
+            }
+
+        } while (j < b.length && i < a.length);
+        
         return result;
     }
 

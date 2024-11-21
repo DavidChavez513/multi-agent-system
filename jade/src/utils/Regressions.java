@@ -52,14 +52,16 @@ public class Regressions {
 
         dataSet = la.adjustXMatrix(dataSet);
 
-        double[][] normalMatrix = la.MLRNormalMatrix(dataSet);
-        double[][] dataSetTranspose = la.transpose(dataSet);
-        double[] normalForTarget = la.multiply(dataSetTranspose, targetVector);
+        double[][] transposeData = la.transpose(dataSet);
 
-        normalMatrix = la.inverse(normalMatrix);
+        double[][] transposeForData = la.multiply(transposeData, dataSet);
+        double[] transposeForTarget = la.multiply(transposeData, targetVector);
 
-        double[] betas = la.resolveEquationSystem(normalMatrix, normalForTarget);
+        double[][] inverseTransposeForData = la.inverse(transposeForData);
 
+        double[] betas = la.multiply(inverseTransposeForData, transposeForTarget);
+
+        double[] hats = ops.yHatMLR(dataSet, betas);
 
         System.out.println(" Hello");
 
