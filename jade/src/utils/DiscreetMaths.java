@@ -10,6 +10,22 @@ public class DiscreetMaths {
         return sum;
     }
 
+    public double RiemannSum(double[] data, double mean) {
+        double sum = 0;
+        for (int i = 0; i < data.length; i++) {
+            sum += Math.pow(data[i] - mean, 2);
+        }
+        return sum;
+    }
+
+    public double RiemannSumHats(double[] data, double[] hats) {
+        double sum = 0;
+        for (int i = 0; i < data.length; i++) {
+            sum += Math.pow(data[i] - hats[i], 2);
+        }
+        return sum;
+    }
+
     public double RiemannSumAbs(double[] data) {
         double sum = 0;
         for (int i = 0; i < data.length; i++) {
@@ -71,6 +87,17 @@ public class DiscreetMaths {
         }
 
         return percents;
+    }
+
+    public double[][] generatePeople(double[][] matrix, int max, int min) {
+
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                matrix[i][j] = Math.random() * (max - min + 1) + min;
+            }
+        }
+
+        return matrix;
     }
 
 }

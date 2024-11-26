@@ -8,5 +8,7 @@ public class Main {
         test.linearRegressionAnalysis();
 
         test.multipleLinearRegressionAnalysis();
+
+        test.geneticAlgorithm();
     }
 }

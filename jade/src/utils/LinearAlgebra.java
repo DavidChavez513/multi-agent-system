@@ -54,24 +54,31 @@ public class LinearAlgebra {
     }
 
     public double determinant(double[][] matrix) {
-        double determinant = 0;
-        
-        if (matrix.length == 1) {
-            return matrix[0][0];
-        }
+        int n = matrix.length;
 
-        if (matrix.length == 2) {
-            determinant = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
-            return determinant;
-        }
-        
-        
-        determinant += Math.pow(-1, matrix.length - 1) * matrix[matrix.length - 1][0] * determinant(minor(matrix, matrix.length - 1, 0));
-        
+    // Caso base para matriz 1x1
+    if (n == 1) {
+        return matrix[0][0];
+    }
 
+    // Caso base para matriz 2x2
+    if (n == 2) {
+        return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+    }
 
+    double determinant = 0;
 
-        return determinant;
+    // Expansión por cofactores en la primera fila
+    for (int j = 0; j < n; j++) {
+        determinant += matrix[0][j] * cofactorSign(0, j) * determinant(minor(matrix, 0, j));
+    }
+
+    return determinant;
+    }
+
+    // Calcula el signo del cofactor (-1)^(i+j)
+    private int cofactorSign(int i, int j) {
+        return (i + j) % 2 == 0 ? 1 : -1;
     }
 
     public double[][] inverse(double[][] matrix) {
@@ -204,9 +211,7 @@ public class LinearAlgebra {
     }
 
     public double[] multiply(double[][] a, double[] b) {
-        double[] result = new double[b.length];
-
-        System.out.println("This is a number columns " + result.length);
+        double[] result = new double[a.length];
 
         if (a[0].length != b.length) {
             System.out.println("No se puede multiplicar una matriz por un vector de diferente numero de columnas");
@@ -226,7 +231,7 @@ public class LinearAlgebra {
                 continue;
             }
 
-        } while (j < b.length && i < a.length);
+        } while (j < a[0].length && i < a.length);
         
         return result;
     }

@@ -14,7 +14,7 @@ public class Regressions {
         Map<String, Object> calculatedData = new HashMap<>();
 
 
-        double[][] data = new DataSet().getSigSigmaData();
+        double[][] data = new DataSet().getBennetonCase();
 
         double beta0 = ops.calculateB0(data);
         double beta1 = ops.calculateB1(data);
@@ -63,7 +63,13 @@ public class Regressions {
 
         double[] hats = ops.yHatMLR(dataSet, betas);
 
-        System.out.println(" Hello");
+        StringBuffer msg = new StringBuffer("Y = " + betas[0]);
+
+        for (int i = 1; i < betas.length; i++) {
+            msg.append(" + " + betas[i] + "x" + i);
+        }
+
+        System.out.println(msg);
 
         // data.put("betas", betas);
 
@@ -73,6 +79,15 @@ public class Regressions {
     public void bestCurveToDataSet(int degreeRegression) {
 
         
+    }
+
+    public Map<String, Object> polynomialLinearRegression() {
+
+        Map<String, Object> data = new HashMap<>();
+
+        
+
+        return data;
     }
 
     public double[] predictions(int noPredicts, double[] betas, int degreeRegression) {
@@ -88,4 +103,18 @@ public class Regressions {
         return fittingMap;
     }
 
+    public void geneticAlgorithm() {
+
+        double[][] matrix = new DataSet().getSigSigmaData();
+
+        double[][] people = new double[100][matrix[0].length];
+
+        people = dm.generatePeople(people, 200, -200);
+
+        double[] evaluationOfPeople = ops.evaluateGeneration(people, matrix);
+
+
+
+        System.out.println("Control Log");
+    }
 }
