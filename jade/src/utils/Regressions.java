@@ -8,6 +8,7 @@ public class Regressions {
     static DiscreetMaths dm = new DiscreetMaths();
     static LinearAlgebra la = new LinearAlgebra();
     static Operations ops = new Operations();
+    static GeneticProccess genProcess = new GeneticProccess(100, 0.95);
 
     public Map<String, Object> linearRegressionAnalysis() {
 
@@ -109,10 +110,26 @@ public class Regressions {
 
         double[][] people = new double[100][matrix[0].length];
 
-        people = dm.generatePeople(people, 200, -200);
+        people = dm.generatePeople(people, 150, 0);
 
-        double[] evaluationOfPeople = ops.evaluateGeneration(people, matrix);
+        boolean isOptimalSolution = false;
 
+        while (!isOptimalSolution) {
+            double[] evaluatePeople = genProcess.evaluateGeneration(people, matrix);
+
+            people = genProcess.crossover(people);
+
+            
+
+            
+
+
+
+            System.out.println("Control Los");
+
+            // people = nextGeneration;
+
+        }
 
 
         System.out.println("Control Log");

@@ -89,50 +89,22 @@ public class Operations {
 
     public int forth(int iterator, int arrSize) { return (iterator + 1) % arrSize; }
 
-    public double[] evaluateGeneration(double[][] generation, double[][] data) {
-        double[] result = new double[generation.length];
-        double[] hats = new double[data.length];
-
-        int person = 0;
-
-        double yMean = mean(lAlgebra.getColumn(data, data[0].length - 1));
-        double sst = dMaths.RiemannSum(lAlgebra.getColumn(data, data[0].length - 1), yMean);
-
-        while (person < generation.length) {
-            
-            for (int i = 0; i < hats.length; i++) {
-                for (int j = 0; j < data[0].length; j++) {
-                    
-                    if (j == 0) {
-                        hats[i] = generation[person][j];
-                        continue;
-                    }
-                    hats[i] += generation[person][j] * data[i][j - 1];
-                }
-            }
-
-            double sse = dMaths.RiemannSumHats(lAlgebra.getColumn(data, data[0].length - 1), hats);
-
-            double error = sse / sst;
-
-            double rSquare = 1 - error;
-
-            result[person] = rSquare;
-
-            person++;
-        }
-
-
-        return result;
+    public void swap(double[] array, int i, int j) {
+        double temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
     }
 
-    public double mean(double[] data) {
-        double result = 0;
-        for (int i = 0; i < data.length; i++) {
-            result += data[i];
+    public void shuffle(double[] individual, double[] parent) {
+        if (individual.length != parent.length) {
+            throw new IllegalArgumentException("Arrays must have the same length");
         }
 
-        return result / data.length;
+        for (int i = individual.length - 1; i > 0; i--) {
+            int index = (int) (Math.random() * (i + 1));
+            swap(individual, i, index);
+            swap(parent, i, index);
+        }
     }
 
 }

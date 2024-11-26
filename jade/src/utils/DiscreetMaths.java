@@ -59,16 +59,6 @@ public class DiscreetMaths {
         }
         return n * factorial(n-1);
     }
-    
-    public double mean(double[] vector){
-        double sumVector = 0;
-
-        for (int i = 0; i < vector.length; i++) {
-            sumVector += vector[i];
-        }
-
-        return sumVector / vector.length;
-    }
 
     public int nCr(int n, int r) {
         return factorial(n) / (factorial(r) * factorial(n-r));
@@ -89,7 +79,7 @@ public class DiscreetMaths {
         return percents;
     }
 
-    public double[][] generatePeople(double[][] matrix, int max, int min) {
+    public double[][] generatePeople(double[][] matrix, double max, double min) {
 
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
@@ -98,6 +88,45 @@ public class DiscreetMaths {
         }
 
         return matrix;
+    }
+
+
+    public double mean(double[] data) {
+        double result = 0;
+        for (int i = 0; i < data.length; i++) {
+            result += data[i];
+        }
+
+        return result / data.length;
+    }
+
+    public double[] greatestFitness(double[][] matrix) {
+        return matrix[0][matrix[0].length - 1] > matrix[1][matrix[0].length - 1] ? matrix[0] : matrix[1];
+    }
+
+    public double[] maxAndMinGenOnParent(double[] parent) {
+
+        double[] result = new double[2];
+
+        double max = parent[0];
+        double min = parent[0];
+
+        for (int i = 0; i < parent.length - 1; i++) {
+
+            if (parent[i] > max) {
+                max = parent[i];
+            }
+
+            if (parent[i] < min) {
+                min = parent[i];
+            }
+            
+        }
+
+        result[0] = max;
+        result[1] = min;
+        
+        return result;
     }
 
 }
