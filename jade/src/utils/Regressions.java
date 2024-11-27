@@ -14,15 +14,14 @@ public class Regressions {
 
         Map<String, Object> calculatedData = new HashMap<>();
 
-
-        double[][] data = new DataSet().getBennetonCase();
+        double[][] data = new DataSet().getSigSigmaData();
 
         double beta0 = ops.calculateB0(data);
         double beta1 = ops.calculateB1(data);
 
         double[] betas = {
-            beta0,
-            beta1
+                beta0,
+                beta1
         };
 
         double[] hats = ops.yHat(data, betas);
@@ -38,8 +37,9 @@ public class Regressions {
         calculatedData.put("hats", hats);
         calculatedData.put("error", error);
         calculatedData.put("errorPercentRow", beta0);
-        
-        System.out.println("Y = " + betas[0] + " + " + betas[1] + "X; Con Linear Regression el porcentaje de error es de: " + percentErrorGlobal);
+
+        System.out.println("Y = " + betas[0] + " + " + betas[1]
+                + "X; Con Linear Regression el porcentaje de error es de: " + percentErrorGlobal);
 
         return calculatedData;
     }
@@ -79,14 +79,11 @@ public class Regressions {
 
     public void bestCurveToDataSet(int degreeRegression) {
 
-        
     }
 
     public Map<String, Object> polynomialLinearRegression() {
 
         Map<String, Object> data = new HashMap<>();
-
-        
 
         return data;
     }
@@ -100,13 +97,12 @@ public class Regressions {
 
         Map<String, Object> fittingMap = new HashMap<>();
 
-
         return fittingMap;
     }
 
     public void geneticAlgorithm() {
 
-        double[][] matrix = new DataSet().getSigSigmaData();
+        double[][] matrix = new DataSet().getDataForMultipleLinearRegression();
 
         double[][] people = new double[100][matrix[0].length];
 
@@ -114,24 +110,35 @@ public class Regressions {
 
         boolean isOptimalSolution = false;
 
+        double bestFittingFind = 0;
+        double[] betasBestFitted = null;
+        int numGeneration = 0;
+
         while (!isOptimalSolution) {
             double[] evaluatePeople = genProcess.evaluateGeneration(people, matrix);
 
             people = genProcess.crossover(people);
 
-            
+            int indexToBestFitting = genProcess.findBestModel(evaluatePeople);
+            bestFittingFind = evaluatePeople[indexToBestFitting];
+            betasBestFitted = people[indexToBestFitting];
 
-            
+            isOptimalSolution = bestFittingFind > 10 && bestFittingFind < 15;
 
-
-
-            System.out.println("Control Los");
+            numGeneration++;
 
             // people = nextGeneration;
-
         }
 
+        StringBuffer msg = new StringBuffer("Y = " + betasBestFitted[0]);
 
-        System.out.println("Control Log");
+        for (int i = 1; i < betasBestFitted.length; i++) {
+            msg.append(" + " + betasBestFitted[i] + "x" + i);
+        }
+
+        System.out.println(msg);
+        System.out.println("Control Best Fitting: " + bestFittingFind);
+
+        System.out.println("Best fitting on generation: " + numGeneration);
     }
 }

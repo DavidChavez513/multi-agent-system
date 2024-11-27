@@ -28,9 +28,7 @@ public class GeneticProccess {
 
         double[][] nextGeneration = new double[this.peoplePerGeneration][lastGeneration[0].length];
 
-        double[] maxAndMinValue = dMaths.maxAndMinGenOnParent(lastGeneration[(int) (Math.random() * this.peoplePerGeneration)]);
-
-        nextGeneration = dMaths.generatePeople(nextGeneration, maxAndMinValue[0], maxAndMinValue[1]);
+        nextGeneration = dMaths.generatePeople(nextGeneration, 150, 0);
 
         int i = 0;
 
@@ -93,5 +91,36 @@ public class GeneticProccess {
 
         return result;
     }
+
+    public int findBestModel(double[] evaluation) {
+
+        double bestFit = evaluation[0];
+
+        int indexToBest = 0;
+
+        for (double fit : evaluation) {
+            
+            if (Math.abs(fit) < Math.abs(bestFit)) {
+                bestFit = fit;
+            } 
+            // Si la distancia es igual, elegimos el número positivo (o negativo, dependiendo de la lógica)
+            else if (Math.abs(fit) == Math.abs(bestFit) && fit > bestFit) {
+                bestFit = fit; // Este paso es opcional, para manejar el caso de empate
+            }
+
+        }
+
+        for (int i = 0; i < evaluation.length; i++) {
+            if (bestFit == evaluation[i]) {
+                indexToBest = i;
+                break;
+            }
+        }
+
+        return indexToBest;
+
+    }
+
+
 
 }
