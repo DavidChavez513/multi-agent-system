@@ -40,9 +40,8 @@ public class DataSet {
         {97, 97},
         {95, 93},
         {91, 94},
-        {97, 93},
-        {83, 92},
-        {83, 86},
+        {97, 95},
+        {83, 93},
         {78, 86},
         {54, 73},
         {67, 80},
@@ -52,13 +51,12 @@ public class DataSet {
         {115, 96},
         {81, 87},
         {78, 89},
-        {30, 80},
+        {30, 60},
         {45, 63},
         {99, 95},
         {32, 61},
         {25, 55},
         {28, 56},
-        {50, 94},
         {90, 94},
         {89, 93}
     };
@@ -73,6 +71,14 @@ public class DataSet {
         {52, 1421},
         {57, 1440},
         {58, 1518},
+    };
+
+    public double[][] examplePolynomialRegression = {
+        {0, 10},
+        {1, 15},
+        {2, 35},
+        {3, 60},
+        {4, 100},
     };
 
     public double[][] getDataForLinearRegression() {
@@ -90,5 +96,9 @@ public class DataSet {
 
     public double[][] getBennetonCase() {
         return bennetonCase;
+    }
+
+    public double[][] getExamplePolynomialRegression() {
+        return examplePolynomialRegression;
     }
 }

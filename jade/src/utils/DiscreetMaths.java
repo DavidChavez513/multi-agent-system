@@ -10,7 +10,7 @@ public class DiscreetMaths {
         return sum;
     }
 
-    public double RiemannSum(double[] data, double mean) {
+    public double  RiemannSum(double[] data, double mean) {
         double sum = 0;
         for (int i = 0; i < data.length; i++) {
             sum += Math.pow(data[i] - mean, 2);
@@ -24,6 +24,16 @@ public class DiscreetMaths {
             sum += Math.pow(data[i] - hats[i], 2);
         }
         return sum;
+    }
+    public double RiemannSum(double[] data, int degreeToUp) {
+
+        double res = 0;
+
+        for (int i = 0; i < data.length; i++) {
+            res += Math.pow(data[i], degreeToUp);
+        }
+
+        return res;
     }
 
     public double RiemannSumAbs(double[] data) {

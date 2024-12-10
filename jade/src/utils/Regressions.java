@@ -1,35 +1,34 @@
 package utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class Regressions {
 
     static DiscreetMaths dm = new DiscreetMaths();
     static LinearAlgebra la = new LinearAlgebra();
     static Operations ops = new Operations();
-    static GeneticProccess genProcess = new GeneticProccess(100, 0.95);
 
-    public Map<String, Object> linearRegressionAnalysis() {
+    public Map<String, Object> linearRegressionAnalysis(double[][] dataset) {
 
         Map<String, Object> calculatedData = new HashMap<>();
 
-        double[][] data = new DataSet().getSigSigmaData();
-
-        double beta0 = ops.calculateB0(data);
-        double beta1 = ops.calculateB1(data);
+        double beta0 = ops.calculateB0(dataset);
+        double beta1 = ops.calculateB1(dataset);
 
         double[] betas = {
                 beta0,
                 beta1
         };
 
-        double[] hats = ops.yHat(data, betas);
+        double[] hats = ops.yHat(dataset, betas);
 
-        double[] error = ops.errors(data, hats);
-        double[] errorsPercent = ops.errorPercent(data, error);
+        double[] error = ops.errors(dataset, hats);
+        double[] errorsPercent = ops.errorPercent(dataset, error);
 
-        double percentErrorGlobal = ops.generalErrorPercent(data, errorsPercent);
+        double percentErrorGlobal = ops.generalErrorPercent(dataset, errorsPercent);
 
         calculatedData.put("beta0", beta0);
         calculatedData.put("beta1", beta1);
@@ -44,25 +43,24 @@ public class Regressions {
         return calculatedData;
     }
 
-    public Map<String, Object> multipleLinearRegressionAnalysis() {
+    public Map<String, Object> multipleLinearRegressionAnalysis(double[][] dataset) {
 
         Map<String, Object> data = new HashMap<>();
 
-        double[][] dataSet = new DataSet().getDataForMultipleLinearRegression();
-        double[] targetVector = la.getColumn(dataSet, dataSet[0].length - 1);
+        double[] targetVector = la.getColumn(dataset, dataset[0].length - 1);
 
-        dataSet = la.adjustXMatrix(dataSet);
+        dataset = la.adjustXMatrix(dataset);
 
-        double[][] transposeData = la.transpose(dataSet);
+        double[][] transposeData = la.transpose(dataset);
 
-        double[][] transposeForData = la.multiply(transposeData, dataSet);
+        double[][] transposeForData = la.multiply(transposeData, dataset);
         double[] transposeForTarget = la.multiply(transposeData, targetVector);
 
         double[][] inverseTransposeForData = la.inverse(transposeForData);
 
         double[] betas = la.multiply(inverseTransposeForData, transposeForTarget);
 
-        double[] hats = ops.yHatMLR(dataSet, betas);
+        double[] hats = ops.yHatMLR(dataset, betas);
 
         StringBuffer msg = new StringBuffer("Y = " + betas[0]);
 
@@ -81,9 +79,51 @@ public class Regressions {
 
     }
 
-    public Map<String, Object> polynomialLinearRegression() {
+    public Map<String, Object> polynomialRegression(double[][] dataset, int degreeToFit) {
 
         Map<String, Object> data = new HashMap<>();
+
+
+        double[][] xDataDegree = new double[dataset.length][degreeToFit + 1];
+        double[] observedData = la.getColumn(dataset, 1);
+
+        int degree = 0;
+
+        while (degree < xDataDegree[0].length) {
+            for (int i = 0; i < xDataDegree.length; i++) {
+
+                xDataDegree[i][degree] = Math.pow(dataset[i][0], degree);
+            }
+            degree++;
+        }
+
+        double[][] xddTranspose = la.transpose(xDataDegree);
+
+        double[][] transposeForXdd = la.multiply(xddTranspose, xDataDegree);
+
+        double[][] inverseXddTranspose = la.inverse(transposeForXdd);
+        
+        double[] xddTransposeForObservedValues = la.multiply(xddTranspose, observedData);
+
+
+        double[] betas = la.multiply(inverseXddTranspose, xddTransposeForObservedValues);
+
+        double[] hats = ops.yHat(dataset, betas);
+
+        double ssRes = ops.calculateSSRes(observedData, hats);
+        double ssTotal = ops.calculateSSTotal(observedData, dm.mean(observedData));
+
+        System.out.println("Error en regression: " + ssRes);
+        System.out.println("Error en Total observado: " + ssTotal);
+
+        double rSquare = 1 - (ssTotal / ssRes);
+
+        System.out.println("R^2: " + rSquare);
+
+
+        System.out.println("control log");
+
+
 
         return data;
     }
@@ -100,45 +140,67 @@ public class Regressions {
         return fittingMap;
     }
 
-    public void geneticAlgorithm() {
+    private ArrayList<Citizen> createTown (int numberOfGenes) {
 
-        double[][] matrix = new DataSet().getDataForMultipleLinearRegression();
+        ArrayList<Citizen> town = new ArrayList<Citizen>();
+        Random random = new Random();
 
-        double[][] people = new double[100][matrix[0].length];
+        while (town.size() < new EvolutionCicle().CITIZENS_ON_THE_TOWN) {
 
-        people = dm.generatePeople(people, 150, 0);
+            double[] genes = new double[numberOfGenes];
 
-        boolean isOptimalSolution = false;
+            for (int i = 0; i < genes.length; i++) {
+                genes[i] = random.nextDouble() * 50 - 100;
+            }
 
-        double bestFittingFind = 0;
-        double[] betasBestFitted = null;
-        int numGeneration = 0;
-
-        while (!isOptimalSolution) {
-            double[] evaluatePeople = genProcess.evaluateGeneration(people, matrix);
-
-            people = genProcess.crossover(people);
-
-            int indexToBestFitting = genProcess.findBestModel(evaluatePeople);
-            bestFittingFind = evaluatePeople[indexToBestFitting];
-            betasBestFitted = people[indexToBestFitting];
-
-            isOptimalSolution = bestFittingFind > 10 && bestFittingFind < 15;
-
-            numGeneration++;
-
-            // people = nextGeneration;
+            town.add(new Citizen(genes));
         }
 
-        StringBuffer msg = new StringBuffer("Y = " + betasBestFitted[0]);
 
-        for (int i = 1; i < betasBestFitted.length; i++) {
-            msg.append(" + " + betasBestFitted[i] + "x" + i);
+        return town;
+    }
+
+    public void geneticAlgorithm(double[][] matrix) {
+
+        ArrayList<Citizen> town = createTown(matrix[0].length);
+
+        EvolutionCicle evolution = new EvolutionCicle(town, matrix);
+
+        int generation = 0;
+
+        Citizen bestResult = null;
+
+        while (generation < evolution.NUMBER_OF_EVOLUTIONS) {
+            evolution.evaluateCitizens();
+
+            bestResult = evolution.bestCitizenOnTheTown();
+            if (bestResult.getFitness() >= evolution.FIT_OPTIMAL) {
+                System.out.println("Personaje optimo encontrado en la generacion: " + generation);
+                break;
+            }
+
+            ArrayList<Citizen> newTown = new ArrayList<>();
+
+            while (newTown.size() < evolution.CITIZENS_ON_THE_TOWN) {
+                
+                Citizen dad = evolution.rouletteForParents();
+                Citizen mom = evolution.rouletteForParents();
+
+                newTown.addAll(evolution.crossover(dad, mom));
+
+            }
+
+
+            evolution.mutateTown();
+            evolution.setTown(newTown);
+            generation++;
+
         }
 
-        System.out.println(msg);
-        System.out.println("Control Best Fitting: " + bestFittingFind);
+        
 
-        System.out.println("Best fitting on generation: " + numGeneration);
+        System.out.println("Control log");
+
+
     }
 }
