@@ -3,7 +3,6 @@ package utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class Regressions {
 
@@ -30,8 +29,7 @@ public class Regressions {
 
         double percentErrorGlobal = ops.generalErrorPercent(dataset, errorsPercent);
 
-        calculatedData.put("beta0", beta0);
-        calculatedData.put("beta1", beta1);
+        calculatedData.put("betas", betas);
         calculatedData.put("errorPercent", percentErrorGlobal);
         calculatedData.put("hats", hats);
         calculatedData.put("error", error);
@@ -138,23 +136,10 @@ public class Regressions {
         return data;
     }
 
-    public double[] predictions(int noPredicts, double[] betas, int degreeRegression) {
-
-        return new double[1];
-    }
-
-    public Map<String, Object> fittingByMultipleLinearRegression() {
-
-        Map<String, Object> fittingMap = new HashMap<>();
-
-        return fittingMap;
-    }
-
     private ArrayList<Citizen> createTown (int numberOfGenes) {
 
         ArrayList<Citizen> town = new ArrayList<Citizen>();
-        Random random = new Random();
-
+        
         while (town.size() < new EvolutionCicle().CITIZENS_ON_THE_TOWN) {
 
             double[] genes = new double[numberOfGenes];

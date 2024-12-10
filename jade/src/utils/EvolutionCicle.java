@@ -9,7 +9,7 @@ public class EvolutionCicle {
     public final double LAPS_ON_ROULETTE = 6;
     public final double CROSSOVER = 0.95;
     public final double FIT_OPTIMAL = 0.85;
-    public final int NUMBER_OF_EVOLUTIONS = 250;
+    public final int NUMBER_OF_EVOLUTIONS = 300;
     public final int CITIZENS_ON_THE_TOWN = 100;
 
     private ArrayList<Citizen> townToEvolute;

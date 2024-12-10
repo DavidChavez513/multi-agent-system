@@ -1,5 +1,8 @@
 package utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class DataSet {
     private double[][] dataMatrix = {
         {1, 2},
@@ -101,4 +104,19 @@ public class DataSet {
     public double[][] getExamplePolynomialRegression() {
         return examplePolynomialRegression;
     }
+
+
+    public Map<String, Object> dataSets() {
+
+        Map<String, Object> directoryMap = new HashMap<>(); 
+
+
+        directoryMap.put("simple-linear-regression", getBennetonCase());
+        directoryMap.put("multiple-linear-regression", getDataForMultipleLinearRegression());
+        directoryMap.put("polynomial-regression", getSigSigmaData());
+
+
+        return directoryMap;
+    }
+
 }
