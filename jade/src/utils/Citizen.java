@@ -72,7 +72,7 @@ public class Citizen {
 
         for (int i = 0; i < genes.length; i++) {
             if (random.nextBoolean()) {
-                genes[i] = Math.random() * (250 - 0 + 1) + 0;
+                genes[i] = this.genes[i] + random.nextGaussian() * 1.5; // El numero magico es una constante de derivacion
             }
         }
 
