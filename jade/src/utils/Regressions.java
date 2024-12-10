@@ -60,8 +60,7 @@ public class Regressions {
 
         double[] betas = la.multiply(inverseTransposeForData, transposeForTarget);
 
-        double[] hats = ops.yHatMLR(dataset, betas);
-
+        System.out.println("=============================== Multiple Linear Regression =====================================");
         StringBuffer msg = new StringBuffer("Y = " + betas[0]);
 
         for (int i = 1; i < betas.length; i++) {
@@ -69,6 +68,12 @@ public class Regressions {
         }
 
         System.out.println(msg);
+
+        double rSquare = ops.calculateRSquare(dataset, betas);
+
+        System.out.println("R^2: " + rSquare);
+
+        System.out.println("=================================================================================================");
 
         // data.put("betas", betas);
 
@@ -113,15 +118,20 @@ public class Regressions {
         double ssRes = ops.calculateSSRes(observedData, hats);
         double ssTotal = ops.calculateSSTotal(observedData, dm.mean(observedData));
 
-        System.out.println("Error en regression: " + ssRes);
-        System.out.println("Error en Total observado: " + ssTotal);
+        System.out.println("============== Polynomial Regression =============================");
 
-        double rSquare = 1 - (ssTotal / ssRes);
+        StringBuffer msg = new StringBuffer("Y=" + betas[0]);
+
+        for (int i = 1; i < betas.length; i++) {
+            msg.append(" + " + betas[i] + "x^" + i);
+        }
+
+        System.out.println(msg);
+
+        double rSquare = 1 - (ssRes / ssTotal);
 
         System.out.println("R^2: " + rSquare);
-
-
-        System.out.println("control log");
+        System.out.println("==========================================================================");
 
 
 
@@ -150,7 +160,7 @@ public class Regressions {
             double[] genes = new double[numberOfGenes];
 
             for (int i = 0; i < genes.length; i++) {
-                genes[i] = Math.random() * (250 - 0 + 1) + 0;
+                genes[i] = Math.random() * (150 - 0 + 1) + 0;
             }
 
             town.add(new Citizen(genes));
@@ -169,12 +179,16 @@ public class Regressions {
         int generation = 0;
 
         Citizen bestResult = null;
+        double rSquare = 0;
 
         while (generation < evolution.NUMBER_OF_EVOLUTIONS) {
             evolution.evaluateCitizens();
 
             bestResult = evolution.bestCitizenOnTheTown();
-            if (bestResult.getFitness() >= evolution.FIT_OPTIMAL) {
+
+            rSquare = ops.calculateRSquare(matrix, bestResult.getGenes());
+
+            if (rSquare >= evolution.FIT_OPTIMAL) {
                 System.out.println("Personaje optimo encontrado en la generacion: " + generation);
                 break;
             }
@@ -197,12 +211,22 @@ public class Regressions {
             evolution.mutateTown();
             evolution.setTown(newTown);
             generation++;
-
         }
 
-        
 
-        System.out.println("Control log");
+
+        System.out.println("========== Genetic Algorithm Prediction =============");
+        StringBuffer msg = new StringBuffer("Y=" + bestResult.getGenes()[0]);
+
+        for (int i = 1; i < bestResult.getGenes().length; i++) {
+            msg.append(" + " + bestResult.getGenes()[i] + "x^" + i);
+        }
+
+        System.out.println(msg);
+
+        System.out.println("R^2: " + rSquare);
+
+        System.out.println("============================================================");
 
 
     }

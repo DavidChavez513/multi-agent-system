@@ -8,7 +8,7 @@ public class EvolutionCicle {
     public final double MUTATION_RATE = 0.01;
     public final double LAPS_ON_ROULETTE = 6;
     public final double CROSSOVER = 0.95;
-    public final double FIT_OPTIMAL = 0.90;
+    public final double FIT_OPTIMAL = 0.85;
     public final int NUMBER_OF_EVOLUTIONS = 250;
     public final int CITIZENS_ON_THE_TOWN = 100;
 
@@ -66,14 +66,15 @@ public class EvolutionCicle {
         int genValues = (int) (Math.random() * ((dad.getGenes().length - 1) - 0 + 1) + 0);
 
         for (int i = 0; i < genes.length; i++) {
-            if (new Random().nextBoolean())
+            if (new Random().nextBoolean()) {
                 mutations[i] = (dad.getGenes()[i] + mom.getGenes()[i]) / genes.length;
-
-            else
-                mutations[i] = Math.random() * (dad.getGenes()[genValues] - 0 + 1) + 0;
+                shuffleChromosomes(dad, mom);
+            } else {
+                mutations[i] = Math.random() * (150 - 0 + 1) + 0;
+            }
         }
 
-        return new Citizen(genes);
+        return new Citizen(mutations);
     }
 
     public void mutateTown() {
@@ -82,6 +83,32 @@ public class EvolutionCicle {
                 citizen.mutate();
             }
         }
+    }
+
+    public void shuffleChromosomes(Citizen child, Citizen parent) {
+
+        for (int i = 0; i < parent.getGenes().length; i++) {
+            shuffle(child.getGenes(), parent.getGenes());
+        }
+
+    }
+
+    public void shuffle(double[] individual, double[] parent) {
+        if (individual.length != parent.length) {
+            throw new IllegalArgumentException("Arrays must have the same length");
+        }
+
+        for (int i = individual.length - 1; i > 0; i--) {
+            int index = (int) (Math.random() * (i + 1));
+            swap(individual, i, index);
+            swap(parent, i, index);
+        }
+    }
+
+    public void swap(double[] array, int i, int j) {
+        double temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
     }
 
 }

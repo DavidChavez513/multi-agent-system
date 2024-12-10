@@ -89,6 +89,18 @@ public class Operations {
 
     public int forth(int iterator, int arrSize) { return (iterator + 1) % arrSize; }
 
+    public double calculateRSquare(double[][] dataset, double[] betas) {
+
+        double[] observedData = lAlgebra.getColumn(dataset, dataset[0].length - 1);
+
+        double[] hats = yHat(dataset, betas);
+
+        double ssRes = calculateSSRes(observedData, hats);
+        double ssTotal = calculateSSTotal(observedData, dMaths.mean(observedData));
+
+        return 1 - (ssRes / ssTotal);
+    }
+
     public void swap(double[] array, int i, int j) {
         double temp = array[i];
         array[i] = array[j];
