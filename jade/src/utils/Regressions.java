@@ -150,7 +150,7 @@ public class Regressions {
             double[] genes = new double[numberOfGenes];
 
             for (int i = 0; i < genes.length; i++) {
-                genes[i] = random.nextDouble() * 50 - 100;
+                genes[i] = Math.random() * (250 - 0 + 1) + 0;
             }
 
             town.add(new Citizen(genes));
@@ -186,10 +186,13 @@ public class Regressions {
                 Citizen dad = evolution.rouletteForParents();
                 Citizen mom = evolution.rouletteForParents();
 
-                newTown.addAll(evolution.crossover(dad, mom));
 
+                if (Math.random() < evolution.CROSSOVER) {
+                    newTown.add(evolution.crossover(dad, mom));
+                } else {
+                    newTown.add(dad);
+                }
             }
-
 
             evolution.mutateTown();
             evolution.setTown(newTown);

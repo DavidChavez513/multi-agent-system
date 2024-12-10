@@ -72,7 +72,7 @@ public class Citizen {
 
         for (int i = 0; i < genes.length; i++) {
             if (random.nextBoolean()) {
-                genes[i] = random.nextGaussian();
+                genes[i] = Math.random() * (250 - 0 + 1) + 0;
             }
         }
 

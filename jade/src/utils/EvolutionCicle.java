@@ -20,7 +20,8 @@ public class EvolutionCicle {
         this.dataset = townToSearch;
     }
 
-    public EvolutionCicle() {}
+    public EvolutionCicle() {
+    }
 
     public void setTown(ArrayList<Citizen> town) {
         this.townToEvolute = town;
@@ -32,15 +33,18 @@ public class EvolutionCicle {
         }
     }
 
-
     public Citizen rouletteForParents() {
 
         Random random = new Random();
 
         ArrayList<Citizen> winners = new ArrayList<>();
 
-        for (int i = 0; i < LAPS_ON_ROULETTE; i++) {
-            winners.add(townToEvolute.get(random.nextInt(townToEvolute.size())));
+        while (winners.size() < 10) {
+
+            Citizen citizenWins = townToEvolute.get(random.nextInt(townToEvolute.size()));
+
+            winners.add(citizenWins);
+
         }
 
         return winners.stream().max((dad, mom) -> Double.compare(dad.getFitness(), mom.getFitness())).orElse(null);
@@ -48,32 +52,29 @@ public class EvolutionCicle {
     }
 
     public Citizen bestCitizenOnTheTown() {
-        return townToEvolute.stream().max((bestCitizen, bestCitizen2) -> Double.compare(bestCitizen.getFitness(), bestCitizen2.getFitness())).orElse(null);
+        return townToEvolute.stream()
+                .max((bestCitizen, bestCitizen2) -> Double.compare(bestCitizen.getFitness(), bestCitizen2.getFitness()))
+                .orElse(null);
     }
 
-    public ArrayList<Citizen> crossover(Citizen dad, Citizen mom) {
-
-        Random rand = new Random();
-        ArrayList<Citizen> sons = new ArrayList<>();
+    public Citizen crossover(Citizen dad, Citizen mom) {
 
         double[] genes = dad.getGenes();
 
         double[] mutations = new double[genes.length];
 
-        while (sons.size() < CITIZENS_ON_THE_TOWN) {
-            
-            for (int i = 0; i < genes.length; i++) {
-                if ( Math.random() > CROSSOVER) mutations[i] = (dad.getGenes()[i] + mom.getGenes()[i]) / genes.length;
-    
-                else mutations[i] = rand.nextDouble() * 50 - 150;
-            }
+        int genValues = (int) (Math.random() * ((dad.getGenes().length - 1) - 0 + 1) + 0);
 
-            sons.add(new Citizen(mutations));
+        for (int i = 0; i < genes.length; i++) {
+            if (new Random().nextBoolean())
+                mutations[i] = (dad.getGenes()[i] + mom.getGenes()[i]) / genes.length;
+
+            else
+                mutations[i] = Math.random() * (dad.getGenes()[genValues] - 0 + 1) + 0;
         }
 
-        return sons;
+        return new Citizen(genes);
     }
-
 
     public void mutateTown() {
         for (Citizen citizen : townToEvolute) {
