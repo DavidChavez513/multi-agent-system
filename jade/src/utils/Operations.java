@@ -107,4 +107,29 @@ public class Operations {
         }
     }
 
+    public double calculateSSRes (double[] observed, double[] hats) {
+        if (observed.length != hats.length) {
+            System.out.println(" Los datos no son comparables ");
+            return 0;
+        }
+
+        double res = 0;
+
+        for (int i = 0; i < hats.length; i++) {
+            res += Math.pow((observed[i] - hats[i]), 2);
+        }
+
+        return res;
+    }
+
+
+    public double calculateSSTotal(double[] observed, double mean) {
+        double res = 0;
+
+        for (int i = 0; i < observed.length; i++) {
+            res += Math.pow((observed[i] - mean), 2);
+        }
+
+        return res;
+    }
 }

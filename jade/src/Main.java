@@ -1,14 +1,18 @@
+import utils.DataSet;
 import utils.Regressions;
 
 public class Main {
 
     public static void main(String[] args) {
         Regressions test = new Regressions();
+        DataSet dataObserved = new DataSet();
 
-        test.linearRegressionAnalysis();
+        test.linearRegressionAnalysis(dataObserved.getSigSigmaData());
 
-        test.multipleLinearRegressionAnalysis();
+        test.multipleLinearRegressionAnalysis(dataObserved.getDataForMultipleLinearRegression());
 
-        test.geneticAlgorithm();
+        test.geneticAlgorithm(dataObserved.getSigSigmaData());
+
+        test.polynomialRegression(dataObserved.getSigSigmaData(), 3);
     }
 }
