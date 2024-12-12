@@ -38,6 +38,10 @@ public class Regressions {
         System.out.println("Y = " + betas[0] + " + " + betas[1]
                 + "X; Con Linear Regression el porcentaje de error es de: " + percentErrorGlobal);
 
+        System.out.println(calculatedData.toString());
+
+        
+
         return calculatedData;
     }
 
