@@ -1,10 +1,11 @@
 package behaviours;
 
+import jade.core.behaviours.Behaviour;
+
 public class SLRBehaviour extends Behaviour {
 
     protected void action() {
 
-        System.out.println("Only for check signature commits");
 
     }
 
